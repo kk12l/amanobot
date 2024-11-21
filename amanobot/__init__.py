@@ -27,6 +27,7 @@ def flavor(msg):
     - ``chosen_inline_result``
     - ``shipping_query``
     - ``pre_checkout_query``
+    - ``chat_member``
 
     An event's flavor is determined by the single top-level key.
     """
@@ -42,6 +43,8 @@ def flavor(msg):
         return 'shipping_query'
     if 'id' in msg and 'total_amount' in msg:
         return 'pre_checkout_query'
+    if 'new_chat_member' in msg and 'old_chat_member' in msg:
+        return 'chat_member'
     top_keys = list(msg.keys())
     if len(top_keys) == 1:
         return top_keys[0]
@@ -64,7 +67,7 @@ def _find_first_key(d, keys):
 
 all_content_types = [
     'text', 'audio', 'animation', 'document', 'game', 'photo', 'sticker', 'video', 'voice',
-    'video_note', 'contact', 'poll', 'location', 'venue', 'new_chat_member', 'left_chat_member',
+    'video_note', 'contact', 'poll', 'location', 'venue', 'left_chat_member',
     'new_chat_title', 'new_chat_photo', 'delete_chat_photo', 'group_chat_created', 'supergroup_chat_created',
     'channel_chat_created', 'migrate_to_chat_id', 'migrate_from_chat_id', 'pinned_message',
     'new_chat_members', 'invoice', 'successful_payment'
@@ -123,6 +126,9 @@ def glance(msg, flavor='chat', long=False):
             return content_type, msg['chat']['type'], msg['chat']['id'], msg['date'], msg['message_id']
         return content_type, msg['chat']['type'], msg['chat']['id']
 
+    def gl_chat_member():
+        return 'new_chat_member', msg['chat']['type'], msg['chat']['id'], msg['new_chat_member']['status']
+
     def gl_callback_query():
         return msg['id'], msg['from']['id'], msg['data']
 
@@ -144,6 +150,7 @@ def glance(msg, flavor='chat', long=False):
 
     try:
         fn = {'chat': gl_chat,
+              'chat_member': gl_chat_member,
               'callback_query': gl_callback_query,
               'inline_query': gl_inline_query,
               'chosen_inline_result': gl_chosen_inline_result,
