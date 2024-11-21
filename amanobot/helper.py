@@ -1041,6 +1041,7 @@ class DefaultRouterMixin():
     """
     def __init__(self, *args, **kwargs):
         self._router = Router(flavor, {'chat': lambda msg: self.on_chat_message(msg),
+                                       'chat_member': lambda msg: self.on_chat_member(msg),
                                        'callback_query': lambda msg: self.on_callback_query(msg),
                                        'inline_query': lambda msg: self.on_inline_query(msg),
                                        'chosen_inline_result': lambda msg: self.on_chosen_inline_result(msg),
