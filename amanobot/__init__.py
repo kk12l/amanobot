@@ -12,7 +12,7 @@ from typing import Union
 
 from . import exception
 
-__version__ = '2.1.0'
+__version__ = '2.1.1'
 
 
 def flavor(msg):
